@@ -1,0 +1,94 @@
+# -*- coding: utf-8 -*-
+
+"""
+Copyright (c) 2013 danxexe
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+"""
+
+import math
+import re
+
+
+# Original idea https://github.com/danxexe/sms-counter
+class SMSHelper(object):
+    GSM_7BIT_CHARS = "@£$¥èéùìòÇ\\nØø\\rÅåΔ_ΦΓΛΩΠΨΣΘΞÆæßÉ !\\\"#¤%&'()*+,-./0123456789:;<=>?¡ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÑÜ§¿abcdefghijklmnopqrstuvwxyzäöñüà"
+    GSM_7BIT_EX_CHARS = "\\^{}\\\\\\[~\\]|€"
+
+    GSM_7BIT_RE = re.compile("^[" + GSM_7BIT_CHARS + "]*$")
+    GSM_7BIT_EX_RE = re.compile("^[" + '{}{}'.format(GSM_7BIT_CHARS, GSM_7BIT_EX_CHARS) + "]*$")
+    GSM_7BIT_EX_ONLY_RE = re.compile("^[\\" + GSM_7BIT_EX_CHARS + "]*$")
+
+    GSM_7BIT = 'GSM_7BIT'
+    GSM_7BIT_EX = 'GSM_7BIT_EX'
+    UTF16 = 'UTF16'
+
+    MESSAGE_LENGTH = {
+        GSM_7BIT: 160,
+        GSM_7BIT_EX: 160,
+        UTF16: 70,
+    }
+
+    MULTI_MESSAGE_LENGTH = {
+        GSM_7BIT: 153,
+        GSM_7BIT_EX: 153,
+        UTF16: 67,
+    }
+
+    def detect_encoding(self, text):
+        if self.GSM_7BIT_RE.match(text):
+            encoding = self.GSM_7BIT
+        elif self.GSM_7BIT_EX_RE.match(text):
+            encoding = self.GSM_7BIT_EX
+        else:
+            encoding = self.UTF16
+        return encoding
+
+    def count(self, text):
+        encoding = self.detect_encoding(text)
+        if encoding == self.GSM_7BIT:
+            length = len(text)
+        elif encoding == self.GSM_7BIT_EX:
+            length = self.count_gsm_7bit_ex(text)
+        elif encoding == self.UTF16:
+            length = len(text.decode('utf-8'))
+        return length
+
+    def parts(self, text):
+        encoding = self.detect_encoding(text)
+        length = self.count(text)
+
+        per_message_length = self.MESSAGE_LENGTH[encoding]
+        if length > self.MESSAGE_LENGTH[encoding]:
+            per_message_length = self.MULTI_MESSAGE_LENGTH[encoding]
+
+        return int(math.ceil(length / float(per_message_length)))
+
+    def count_gsm_7bit_ex(self, text):
+        gsm_7bit_chars = []
+        gsm_7bit_ex_chars = []
+        message = text.decode('utf-8')
+
+        for char in message:
+            if self.GSM_7BIT_EX_ONLY_RE.match(char.encode('utf-8')):
+                gsm_7bit_ex_chars.append(char)
+            else:
+                gsm_7bit_chars.append(char.encode('utf-8'))
+
+        return len(gsm_7bit_chars) + (len(gsm_7bit_ex_chars) * 2)
