@@ -39,13 +39,13 @@ class SMSHelperTest(TestCase):
         self.assert_parts_equal('最' * 135, 3)
 
     def assert_encoding_equal(self, text, encoding):
-        assert SMSHelper().detect_encoding(text) == encoding
+        assert SMSHelper(text).detect_encoding() == encoding
 
     def assert_length_equal(self, text, count):
-        assert SMSHelper().count(text) == count
+        assert SMSHelper(text).count() == count
 
     def assert_parts_equal(self, text, parts):
-        assert SMSHelper().parts(text) == parts
+        assert SMSHelper(text).parts() == parts
 
     def assert_sms_encoding_equal(self, text, encoding):
-        assert SMSHelper().encoding(text) == encoding
+        assert SMSHelper(text).encoding() == encoding

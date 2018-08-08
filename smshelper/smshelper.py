@@ -51,28 +51,31 @@ class SMSHelper(object):
         UTF16: 67,
     }
 
-    def detect_encoding(self, text):
-        if self.GSM_7BIT_RE.match(text):
+    def __init__(self, text):
+        self._text = text
+
+    def detect_encoding(self):
+        if self.GSM_7BIT_RE.match(self._text):
             encoding = self.GSM_7BIT
-        elif self.GSM_7BIT_EX_RE.match(text):
+        elif self.GSM_7BIT_EX_RE.match(self._text):
             encoding = self.GSM_7BIT_EX
         else:
             encoding = self.UTF16
         return encoding
 
-    def count(self, text):
-        encoding = self.detect_encoding(text)
+    def count(self):
+        encoding = self.detect_encoding()
         if encoding == self.GSM_7BIT:
-            length = len(text)
+            length = len(self._text)
         elif encoding == self.GSM_7BIT_EX:
-            length = self.count_gsm_7bit_ex(text)
+            length = self._count_gsm_7bit_ex()
         elif encoding == self.UTF16:
-            length = len(text.decode('utf-8'))
+            length = len(self._text.decode('utf-8'))
         return length
 
-    def parts(self, text):
-        encoding = self.detect_encoding(text)
-        length = self.count(text)
+    def parts(self):
+        encoding = self.detect_encoding()
+        length = self.count()
 
         per_message_length = self.MESSAGE_LENGTH[encoding]
         if length > self.MESSAGE_LENGTH[encoding]:
@@ -80,10 +83,10 @@ class SMSHelper(object):
 
         return int(math.ceil(length / float(per_message_length)))
 
-    def count_gsm_7bit_ex(self, text):
+    def _count_gsm_7bit_ex(self):
         gsm_7bit_chars = []
         gsm_7bit_ex_chars = []
-        message = text.decode('utf-8')
+        message = self._text.decode('utf-8')
 
         for char in message:
             if self.GSM_7BIT_EX_ONLY_RE.match(char.encode('utf-8')):
