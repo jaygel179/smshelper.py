@@ -28,24 +28,24 @@ import re
 
 # Original idea https://github.com/danxexe/sms-counter
 class SMSHelper(object):
-    GSM_7BIT_CHARS = "@£$¥èéùìòÇ\\nØø\\rÅåΔ_ΦΓΛΩΠΨΣΘΞÆæßÉ !\\\"#¤%&'()*+,-./0123456789:;<=>?¡ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÑÜ§¿abcdefghijklmnopqrstuvwxyzäöñüà"
-    GSM_7BIT_EX_CHARS = "\\^{}\\\\\\[~\\]|€"
+    _GSM_7BIT_CHARS = "@£$¥èéùìòÇ\\nØø\\rÅåΔ_ΦΓΛΩΠΨΣΘΞÆæßÉ !\\\"#¤%&'()*+,-./0123456789:;<=>?¡ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÑÜ§¿abcdefghijklmnopqrstuvwxyzäöñüà"
+    _GSM_7BIT_EX_CHARS = "\\^{}\\\\\\[~\\]|€"
 
-    GSM_7BIT_RE = re.compile("^[" + GSM_7BIT_CHARS + "]*$")
-    GSM_7BIT_EX_RE = re.compile("^[" + '{}{}'.format(GSM_7BIT_CHARS, GSM_7BIT_EX_CHARS) + "]*$")
-    GSM_7BIT_EX_ONLY_RE = re.compile("^[\\" + GSM_7BIT_EX_CHARS + "]*$")
+    _GSM_7BIT_RE = re.compile("^[" + _GSM_7BIT_CHARS + "]*$")
+    _GSM_7BIT_EX_RE = re.compile("^[" + '{}{}'.format(_GSM_7BIT_CHARS, _GSM_7BIT_EX_CHARS) + "]*$")
+    _GSM_7BIT_EX_ONLY_RE = re.compile("^[\\" + _GSM_7BIT_EX_CHARS + "]*$")
 
     GSM_7BIT = 'GSM_7BIT'
     GSM_7BIT_EX = 'GSM_7BIT_EX'
     UTF16 = 'UTF16'
 
-    MESSAGE_LENGTH = {
+    _MESSAGE_LENGTH = {
         GSM_7BIT: 160,
         GSM_7BIT_EX: 160,
         UTF16: 70,
     }
 
-    MULTI_MESSAGE_LENGTH = {
+    _MULTI_MESSAGE_LENGTH = {
         GSM_7BIT: 153,
         GSM_7BIT_EX: 153,
         UTF16: 67,
@@ -55,9 +55,9 @@ class SMSHelper(object):
         self._text = text
 
     def detect_encoding(self):
-        if self.GSM_7BIT_RE.match(self._text):
+        if self._GSM_7BIT_RE.match(self._text):
             encoding = self.GSM_7BIT
-        elif self.GSM_7BIT_EX_RE.match(self._text):
+        elif self._GSM_7BIT_EX_RE.match(self._text):
             encoding = self.GSM_7BIT_EX
         else:
             encoding = self.UTF16
@@ -77,9 +77,9 @@ class SMSHelper(object):
         encoding = self.detect_encoding()
         length = self.count()
 
-        per_message_length = self.MESSAGE_LENGTH[encoding]
-        if length > self.MESSAGE_LENGTH[encoding]:
-            per_message_length = self.MULTI_MESSAGE_LENGTH[encoding]
+        per_message_length = self._MESSAGE_LENGTH[encoding]
+        if length > self._MESSAGE_LENGTH[encoding]:
+            per_message_length = self._MULTI_MESSAGE_LENGTH[encoding]
 
         return int(math.ceil(length / float(per_message_length)))
 
@@ -89,7 +89,7 @@ class SMSHelper(object):
         message = self._text.decode('utf-8')
 
         for char in message:
-            if self.GSM_7BIT_EX_ONLY_RE.match(char.encode('utf-8')):
+            if self._GSM_7BIT_EX_ONLY_RE.match(char.encode('utf-8')):
                 gsm_7bit_ex_chars.append(char)
             else:
                 gsm_7bit_chars.append(char.encode('utf-8'))
