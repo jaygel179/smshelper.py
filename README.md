@@ -8,9 +8,28 @@ Installation
 pip install smshelper
 
 
-Examples
+Supports
 --------
+- Python 2
 
+
+Requirements
+------------
+- None
+
+
+Usage
+-----
+```
+>>> from smshelper import SMSHelper
+>>> sms = SMSHelper('Sample message.')
+>>> sms.count()
+15
+>>> sms.parts()
+1
+>>> sms.detect_encoding()
+'GSM_7BIT'
+```
 
 Original Idea
 -------------
