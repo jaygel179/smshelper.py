@@ -46,6 +46,3 @@ class SMSHelperTest(TestCase):
 
     def assert_parts_equal(self, text, parts):
         assert SMSHelper(text).parts() == parts
-
-    def assert_sms_encoding_equal(self, text, encoding):
-        assert SMSHelper(text).encoding() == encoding

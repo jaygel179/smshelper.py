@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.org/jaygel179/smshelper.svg?branch=master)](https://travis-ci.org/jaygel179/sms-counter)
+[![Coverage Status](https://github.com/jaygel179/smshelper/blob/master/coverage.svg)](https://pypi.org/project/coverage-badge/)
+
 
 SMS Helper
 ==========
@@ -7,7 +9,7 @@ SMS tool that can help you properly count the length of an SMS, calculate the pa
 
 Installation
 ------------
-pip install smshelper
+`$ pip install smshelper`
 
 
 Supports
@@ -38,11 +40,6 @@ Original Idea
 -------------
 [danxexe/sms-counter](https://github.com/danxexe/sms-counter)
 
-
-TODO
-----
-- docs
-- travis
 
 
 License
