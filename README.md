@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/jaygel179/sms-counter.svg?branch=master)](https://travis-ci.org/jaygel179/sms-counter)
+[![Build Status](https://travis-ci.org/jaygel179/smshelper.svg?branch=master)](https://travis-ci.org/jaygel179/sms-counter)
 
 SMS Helper
 ==========
