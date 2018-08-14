@@ -35,6 +35,8 @@ class SMSHelper(object):
     _GSM_7BIT_EX_RE = re.compile("^[" + '{}{}'.format(_GSM_7BIT_CHARS, _GSM_7BIT_EX_CHARS) + "]*$")
     _GSM_7BIT_EX_ONLY_RE = re.compile("^[\\" + _GSM_7BIT_EX_CHARS + "]*$")
 
+    _GSM_7BIT_ESC = '\u001b'
+
     GSM_7BIT = 'GSM_7BIT'
     GSM_7BIT_EX = 'GSM_7BIT_EX'
     UTF16 = 'UTF16'
@@ -76,12 +78,33 @@ class SMSHelper(object):
     def parts(self):
         encoding = self.detect_encoding()
         length = self.count()
+        parts = 1
 
-        per_message_length = self._MESSAGE_LENGTH[encoding]
-        if length > self._MESSAGE_LENGTH[encoding]:
-            per_message_length = self._MULTI_MESSAGE_LENGTH[encoding]
+        is_multipart = length > self._MESSAGE_LENGTH[encoding]
+        if not is_multipart:
+            return parts
 
-        return int(math.ceil(length / float(per_message_length)))
+        per_message_length = self._MULTI_MESSAGE_LENGTH[encoding]
+        if encoding in [self.GSM_7BIT, self.UTF16]:
+            return int(math.ceil(length / float(per_message_length)))
+
+        new_text = []
+        for char in self._text.decode('utf-8'):
+            if self._GSM_7BIT_EX_ONLY_RE.match(char.encode('utf-8')):
+                new_text.append(self._GSM_7BIT_ESC)
+            new_text.append(char)
+
+        count = 0
+        for char in new_text:
+            count += 1
+            if count == 153 and char == self._GSM_7BIT_ESC:
+                count = 1
+                parts += 1
+            elif count == 153:
+                count = 0
+                parts += 1
+
+        return parts
 
     def _count_gsm_7bit_ex(self):
         gsm_7bit_chars = []

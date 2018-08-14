@@ -31,12 +31,17 @@ class SMSHelperTest(TestCase):
         self.assert_parts_equal('S' * 307, 3)
         self.assert_parts_equal('€' * 80, 1)
         self.assert_parts_equal('€' * 81, 2)
-        self.assert_parts_equal('€' * 153, 2)
-        self.assert_parts_equal('€' * 154, 3)
+        self.assert_parts_equal('€' * 152, 2)
+        self.assert_parts_equal('€' * 153, 3)
         self.assert_parts_equal('最' * 70, 1)
         self.assert_parts_equal('最' * 72, 2)
         self.assert_parts_equal('最' * 134, 2)
         self.assert_parts_equal('最' * 135, 3)
+        self.assert_parts_equal('|{}'.format('S' * 158), 1)
+        self.assert_parts_equal('|{}'.format('S' * 159), 2)
+        self.assert_parts_equal('{}|{}'.format('S' * 152, 'S' * 152), 3)
+        self.assert_parts_equal('{}|{}|'.format('S' * 152, 'S' * 150), 3)
+        self.assert_parts_equal('{}|{}|{}|'.format('S' * 152, 'S' * 150, 'S' * 150), 4)
 
     def assert_encoding_equal(self, text, encoding):
         assert SMSHelper(text).detect_encoding() == encoding
