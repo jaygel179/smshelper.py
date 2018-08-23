@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/jaygel179/smshelper.svg?branch=master)](https://travis-ci.org/jaygel179/sms-counter)
-[![Coverage Status](https://github.com/jaygel179/smshelper/blob/master/coverage.svg)](https://pypi.org/project/coverage-badge/)
+[![Coverage Status](https://coveralls.io/repos/github/jaygel179/smshelper.py/badge.svg)](https://coveralls.io/github/jaygel179/smshelper.py)
 
 
 SMS Helper

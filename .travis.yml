@@ -5,5 +5,13 @@ python:
 install:
   - python setup.py -q install
 
+before_script:
+  - pip install python-coveralls
+
 script:
   - python setup.py test
+  - coverage run --source=smshelper/ setup.py test
+  - coverage report -m
+
+after_success:
+  - coveralls
