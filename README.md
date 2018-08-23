@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/jaygel179/smshelper.svg?branch=master)](https://travis-ci.org/jaygel179/sms-counter)
+[![Build Status](https://travis-ci.org/jaygel179/smshelper.py.svg?branch=master)](https://travis-ci.org/jaygel179/smshelper.py)
 [![Coverage Status](https://coveralls.io/repos/github/jaygel179/smshelper.py/badge.svg)](https://coveralls.io/github/jaygel179/smshelper.py)
 
 
