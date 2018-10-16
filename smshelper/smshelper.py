@@ -68,7 +68,7 @@ class SMSHelper(object):
     def count(self):
         encoding = self.detect_encoding()
         if encoding == self.GSM_7BIT:
-            length = len(self._text)
+            length = len(self._text.decode('utf-8'))
         elif encoding == self.GSM_7BIT_EX:
             length = self._count_gsm_7bit_ex()
         elif encoding == self.UTF16:

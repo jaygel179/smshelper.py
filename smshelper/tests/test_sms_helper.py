@@ -15,6 +15,7 @@ class SMSHelperTest(TestCase):
         self.assert_encoding_equal('Sample message {', SMSHelper.GSM_7BIT_EX)
         self.assert_encoding_equal('Sample message }', SMSHelper.GSM_7BIT_EX)
         self.assert_encoding_equal('Sample message 最高', SMSHelper.UTF16)
+        self.assert_encoding_equal('Sample message Å', SMSHelper.GSM_7BIT)
 
     def test_should_return_correct_count(self):
         self.assert_length_equal('Sample message', 14)
@@ -22,6 +23,7 @@ class SMSHelperTest(TestCase):
         self.assert_length_equal('Sample message €', 17)
         self.assert_length_equal('最高', 2)
         self.assert_length_equal('a 最高', 4)
+        self.assert_length_equal('Å', 1)
 
     def test_should_return_correct_parts(self):
         self.assert_parts_equal('Sample message', 1)
