@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="smshelper",
-    version="0.1.4",
+    version="0.1.5",
     author="Elpedio Adoptante Jr",
     author_email="adoptante.elpedio@gmail.com",
     description="SMS helper and tool",
